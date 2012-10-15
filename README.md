@@ -5,7 +5,7 @@ Scripts created and used by me for automation of repetitive tasks
 
 # Git
 
-## commit-msg
+## commit-msg(prepending pivotal story ids to commit messages)
 
 A git for pivotal tracker integration. Pivotal tracker has this functionality that if configured, allows commits
 to appear as comments in the story. this is acheived by appending `[#Pivotal_id]` to the commit message.
