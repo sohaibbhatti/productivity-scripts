@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+#
+# Script for appending the pivotal id of a story to the commits
+# Branches must begin with st{pivotal_story_id}_description_here
+#
+# Reads the pivotal story from the branch name and appends it to the
+# commit messages. Supports the following formats
+#
+# Examples:
+#     st{#pivotal_id}_commit_description_here
+#     hotfix/st{#pivotal_id}_commit_description_here
+#     feature/st{#pivotal_id}_commit_description_here
+#
+# Sohaib Talaat Bhatti -- sohaibbbhatti@gmail.com
+# sohaibbbhatti.wordpress.org
+
+
+branch_name = `git branch`[/\* (.+)/]
+story_subset = branch_name[/\* ((feature\/)|(hotfix\/)){0,1}st(\d+)/]
+
+pivotal_story_id = "[##{story_subset[/\d+/]}]" if story_subset
+
+message_file = ARGV[0]
+message = File.read(message_file)
+message = if pivotal_story_id
+            [pivotal_story_id, message].join ' '
+          else
+            message
+          end
+
+File.open(message_file, 'w') { |f| f.write message }
