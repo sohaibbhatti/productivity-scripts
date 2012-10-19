@@ -23,7 +23,7 @@ pivotal_story_id = "[##{story_subset[/\d+/]}]" if story_subset
 message_file = ARGV[0]
 message = File.read(message_file)
 message = if pivotal_story_id
-            [pivotal_story_id, message].join ' '
+            message.empty? ? message : [pivotal_story_id, message].join(' ')
           else
             message
           end
