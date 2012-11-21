@@ -29,7 +29,12 @@ git branch hotfix/st{pivotal_story_id}_commit_description_here
 
 # Tmux
 
-Appending tmux configuration file for mimicking VIM like behavior.
+## Configuration File for custom bindings
+
+The default bindings of tmux aren't the easiest to learn. These
+configurations make recalling commands a whole lot trivial. Relevant
+comments added in the file
+
 
 Credit: Brian P. Hogan -> Highly recommend his book!
 
