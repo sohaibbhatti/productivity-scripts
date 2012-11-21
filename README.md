@@ -26,3 +26,14 @@ git branch st{pivotal_story_id}_commit_description_here
 git branch feature/st{pivotal_story_id}_commit_description_here
 git branch hotfix/st{pivotal_story_id}_commit_description_here
 ```
+
+# Tmux
+
+Appending tmux configuration file for mimicking VIM like behavior.
+
+Credit: Brian P. Hogan -> Highly recommend his book!
+
+### Instructions
+
+1. Copy the .tmux.conf file to ~/.tmux.conf location
+2. You're set!
