@@ -2,6 +2,7 @@ class SpeedDump < Thor
   desc "load_dump FILE", "loads a dump with the given file name in an optimized fashion"
   method_option :user_name, :aliases => "-u", :desc => "Mysql username, default = root"
   method_option :password,  :aliases => "-p", :desc => "Mysql password, default = nil"
+  method_option :database,  :aliases => "-d", :desc => "MYsql Database, default = Moviepass_development"
   def load_dump(file)
     puts "you're using the following file name #{file}"
     DbOptimizer.new(file).optimize!
@@ -31,8 +32,8 @@ class DbOptimizer
       File.foreach(@db_file) { |li| fo.puts li }
     end
 
-    File.rename(@file_name , @file_name + '.old') 
-    File.rename(new_file_path, @file_name)
+    File.delete @db_file
+    File.rename new_file_path, @file_name
   end
 
   private
@@ -41,14 +42,16 @@ class DbOptimizer
   end
 
   def get_missing_settings
-    puts @detected_settings
     OPTIMIZED_SETTINGS - @detected_settings.compact.uniq
   end
 
   def already_optimized?
     @db_file.rewind
     @detected_settings.clear
-    (1..10).each { |line| @detected_settings << line if OPTIMIZED_SETTINGS.find_index(line) }
+    (1..10).each do |count|
+      line = @db_file.gets.delete("\n")
+      @detected_settings << line if OPTIMIZED_SETTINGS.find_index(line)
+    end
     @db_file.rewind
   end
 
