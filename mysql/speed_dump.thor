@@ -7,9 +7,31 @@ class SpeedDump < Thor
     puts "you're using the following file name #{file}"
     DbOptimizer.new(file).optimize!
     puts "File optimized"
-    #`rake db:drop`
-    #`rake db:create`
-    #`mysql -uroot Moviepass_development < #{file}`
+    puts "Loading Dump"
+    Db.new(file, options).load_db
+    puts "Dump Loaded"
+  end
+end
+
+class Db
+  def initialize(file_name, options)
+    @file_name = file_name
+    init_db_settings options
+  end
+
+  def load_db
+    if @password
+      `mysql -u#{@user_name} -p#{@password} #{@database} < #{@file_name}`
+    else
+      `mysql -u#{@user_name} #{@database} < #{@file_name}`
+    end
+  end
+
+  private
+  def init_db_settings(options)
+    @user_name = options[:user_name] || 'root'
+    @database  = options[:database] || "Moviepass_development"
+    @password ||= options[:password]
   end
 end
 
