@@ -7,9 +7,9 @@ class SpeedDump < Thor
     puts "you're using the following file name #{file}"
     DbOptimizer.new(file).optimize!
     puts "File optimized"
-    `rake db:drop`
-    `rake db:create`
-    `mysql -uroot Moviepass_development < #{file}`
+    #`rake db:drop`
+    #`rake db:create`
+    #`mysql -uroot Moviepass_development < #{file}`
   end
 end
 
@@ -49,12 +49,20 @@ class DbOptimizer
   end
 
   def already_optimized?
-    @db_file.rewind
-    @detected_settings.clear
-    (1..10).each do |count|
-      line = @db_file.gets.delete("\n")
-      @detected_settings << line if OPTIMIZED_SETTINGS.find_index(line)
+    maintain_file_index_integrity do
+      @detected_settings.clear
+      10.times { @detected_settings << find_setting }
     end
+  end
+
+  def find_setting
+    line = @db_file.gets.delete("\n")
+    line if OPTIMIZED_SETTINGS.find_index(line)
+  end
+
+  def maintain_file_index_integrity
+    @db_file.rewind
+    yield if block_given?
     @db_file.rewind
   end
 
