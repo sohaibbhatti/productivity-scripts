@@ -7,6 +7,9 @@ class SpeedDump < Thor
     puts "you're using the following file name #{file}"
     DbOptimizer.new(file).optimize!
     puts "File optimized"
+    `rake db:drop`
+    `rake db:create`
+    `mysql -uroot Moviepass_development < #{file}`
   end
 end
 
