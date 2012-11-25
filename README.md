@@ -42,3 +42,21 @@ Credit: Brian P. Hogan -> Highly recommend his book!
 
 1. Copy the .tmux.conf file to ~/.tmux.conf location
 2. You're set!
+
+# MySql
+
+## SpeedDump
+
+Automated for my primary work which involves loading database dumps of all the theaters, movies and showtimes in U.S.A.
+This equates to the dump being a size of around a gig. Tweaks mentioned by [James Smith](http://loopj.com/2009/07/06/fast-mysql-backup-restore/)
+are first applied. Then the database dump is actually loaded.
+
+### Instructions
+
+1. As a prerequisite, it is important for [Thor](https://github.com/wycats/thor) to be installed.
+2. Download the file and place where ever convenient.
+3. Use the script!
+
+```
+  thor speed_dump:load_dump sql_dump.sql -u user -p password -d database
+```
