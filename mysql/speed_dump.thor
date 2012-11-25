@@ -1,3 +1,16 @@
+# Script for Loading Mysql Database dumps quickly.
+#
+# Takes in the dump as an input, along with optional username,
+# password and database inputs as arguments and loads the dump
+# into the db.
+#
+# Examples:
+#   thor speed_dump:load_dump moviepass.sql -u root -d Moviepass_development
+#   thor speed_dump:load_dump moviepass.sql -u root -p kryton -d Moviepass_dvlpmt
+#
+# Sohaib Talaat Bhatti -- sohaibbbhatti@gmail.com
+# sohaibbbhatti.wordpress.org
+
 class SpeedDump < Thor
   desc "load_dump FILE", "loads a dump with the given file name in an optimized fashion"
   method_option :user_name, :aliases => "-u", :desc => "Mysql username, default = root"
