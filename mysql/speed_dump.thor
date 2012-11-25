@@ -6,8 +6,7 @@
 #
 # Examples:
 #   thor speed_dump:load_dump moviepass.sql -u root -d Moviepass_development
-#   thor speed_dump:load_dump moviepass.sql -u root -p kryton -d Moviepass_dvlpmt
-#
+#   thor speed_dump:load_dump moviepass.sql -u root -p kryton -d Moviepass_dvlpt
 # Sohaib Talaat Bhatti -- sohaibbbhatti@gmail.com
 # sohaibbbhatti.wordpress.org
 
@@ -68,6 +67,7 @@ class DbOptimizer
     File.open(new_file_path, 'w') do |fo|
       get_missing_settings.each { |settings| fo.puts settings }
       File.foreach(@db_file) { |li| fo.puts li }
+      fo.puts "COMMIT;"
     end
 
     File.delete @db_file
