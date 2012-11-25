@@ -5,6 +5,7 @@ class SpeedDump < Thor
   def load_dump(file)
     puts "you're using the following file name #{file}"
     DbOptimizer.new(file).optimize!
+    puts "File optimized"
   end
 end
 
@@ -17,20 +18,21 @@ class DbOptimizer
 
   def initialize(file)
     @db_file = File.open(file)
+    @file_name = file
     @detected_settings = []
     already_optimized?
   end
 
   def optimize!
+    puts "FILE ALREADY OPTIMIZED" if get_missing_settings.empty?
     return true if get_missing_settings.empty?
-    File.open('tmp_file', 'w') do |fo|
+    File.open(new_file_path, 'w') do |fo|
       get_missing_settings.each { |settings| fo.puts settings }
       File.foreach(@db_file) { |li| fo.puts li }
     end
 
-    file_name = get_base_name
-    File.rename(file_name , file_name + '.old')
-    File.rename('tmp_file', file_name)
+    File.rename(@file_name , @file_name + '.old') 
+    File.rename(new_file_path, @file_name)
   end
 
   private
@@ -39,6 +41,7 @@ class DbOptimizer
   end
 
   def get_missing_settings
+    puts @detected_settings
     OPTIMIZED_SETTINGS - @detected_settings.compact.uniq
   end
 
@@ -47,5 +50,9 @@ class DbOptimizer
     @detected_settings.clear
     (1..10).each { |line| @detected_settings << line if OPTIMIZED_SETTINGS.find_index(line) }
     @db_file.rewind
+  end
+
+  def new_file_path
+    "#{@db_file.path.gsub(File.basename(@db_file), '')}tmp_file"
   end
 end
