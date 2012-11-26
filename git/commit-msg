@@ -15,17 +15,39 @@
 # sohaibbbhatti.wordpress.org
 
 
+def blank?(message)
+  message.nil? || message.empty?
+end
+
+# Detects whether any string prepends the git message.
+#
+# Example
+#
+#  message.exists? "My first commit
+#  # Please enter the commit message for your changes. Lines starting" => true
+#
+def message_exists?(message)
+  blank? message.rpartition(commit_msg_start).first
+end
+
+def commit_msg_start
+  "# Please enter the commit message for your changes. Lines starting"
+end
+
 branch_name = `git branch`[/\* (.+)/]
 story_subset = branch_name[/\* ((feature\/)|(hotfix\/)){0,1}st(\d+)/]
 
+# Regex for detecting pivotal story id
 pivotal_story_id = "[##{story_subset[/\d+/]}]" if story_subset
 
 message_file = ARGV[0]
 message = File.read(message_file)
+
 message = if pivotal_story_id
-            message.empty? ? message : [pivotal_story_id, message].join(' ')
+            # Only commit if commit message exists
+            message_exists?(message) ? [pivotal_story_id, message].join(' ') : false
           else
             message
           end
 
-File.open(message_file, 'w') { |f| f.write message }
+File.open(message_file, 'w') { |f| f.write message } if message
