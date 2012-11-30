@@ -17,6 +17,8 @@ class SpeedDump < Thor
   method_option :database,  :aliases => "-d", :desc => "MYsql Database, default = Moviepass_development"
   def load_dump(file)
     puts "you're using the following file name #{file}"
+    
+    file = Db.new(file, options).detect_zip
     DbOptimizer.new(file).optimize!
     puts "File optimized"
     puts "Loading Dump"
@@ -31,12 +33,26 @@ class Db
     init_db_settings options
   end
 
+  def detect_zip
+    puts 'Detecting Compression'
+    if @file_name.end_with? '.gz'
+      puts 'Compression Detected. Uncompressing....'
+      `gunzip #{@file_name}`
+      puts 'Uncompressed'
+      @file_name.gsub('.gz', '')
+    else
+      @file_name
+    end
+  end
+
   def load_db
+    invoke_before_hook
     if @password
       `mysql -u#{@user_name} -p#{@password} #{@database} < #{@file_name}`
     else
       `mysql -u#{@user_name} #{@database} < #{@file_name}`
     end
+    invoke_after_hook
   end
 
   private
@@ -44,6 +60,14 @@ class Db
     @user_name = options[:user_name] || 'root'
     @database  = options[:database] || "Moviepass_development"
     @password ||= options[:password]
+  end
+
+  def invoke_before_hook
+    # Insert code that needs to be invoked BEFORE loading dump
+  end
+
+  def invoke_after_hook
+    # Insert code that needs to be invoked AFTER loading dump
   end
 end
 
@@ -96,7 +120,7 @@ class DbOptimizer
   end
 
   def find_setting
-    line = @db_file.gets.delete("\n")
+    line = @db_file.gets.gsub("\n", '')
     line if OPTIMIZED_SETTINGS.find_index(line)
   end
 
