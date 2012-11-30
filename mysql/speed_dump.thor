@@ -19,11 +19,10 @@ class SpeedDump < Thor
     puts "you're using the following file name #{file}"
     
     file = Db.new(file, options).detect_zip
+    puts 'Optimizing File'
     DbOptimizer.new(file).optimize!
     puts "File optimized"
-    puts "Loading Dump"
     Db.new(file, options).load_db
-    puts "Dump Loaded"
   end
 end
 
@@ -47,11 +46,13 @@ class Db
 
   def load_db
     invoke_before_hook
+    puts 'Loading dump'
     if @password
       `mysql -u#{@user_name} -p#{@password} #{@database} < #{@file_name}`
     else
       `mysql -u#{@user_name} #{@database} < #{@file_name}`
     end
+    puts 'Dump Loaded'
     invoke_after_hook
   end
 
