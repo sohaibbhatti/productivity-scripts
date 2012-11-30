@@ -61,16 +61,21 @@ class DbOptimizer
     already_optimized?
   end
 
+  # Appends Speed Load statements to dump
+  #
+  # Returns nil
   def optimize!
     puts "FILE ALREADY OPTIMIZED" if get_missing_settings.empty?
     return true if get_missing_settings.empty?
     File.open(new_file_path, 'w') do |fo|
       get_missing_settings.each { |settings| fo.puts settings }
-      File.foreach(@db_file) { |li| fo.puts li }
+      File.foreach(@file_name) { |li| fo.puts li }
+      #@db_file.foreach { |li| fo.puts li }
+
       fo.puts "COMMIT;"
     end
 
-    File.delete @db_file
+    File.delete @file_name
     File.rename new_file_path, @file_name
   end
 
@@ -102,6 +107,6 @@ class DbOptimizer
   end
 
   def new_file_path
-    "#{@db_file.path.gsub(File.basename(@db_file), '')}tmp_file"
+    "#{@db_file.path.gsub(File.basename(@file_name), '')}tmp_file"
   end
 end
