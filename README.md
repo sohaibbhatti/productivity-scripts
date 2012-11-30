@@ -12,6 +12,9 @@ to appear as comments in the story. this is acheived by appending `[#Pivotal_id]
 
 This reads the Pivotal story id from the branch name where it is defined and appends it to the start of every message.
 
+### Update
+ * Fixed a bug leading to empty commits whenever verbose commits belonging to pivotal branches were left empty. 
+
 ### Instructions
 
 1. Copy this file and paste it into the `.git/hooks` folder of the current project.
