@@ -55,7 +55,9 @@ are first applied. Then the database dump is actually loaded.
 
 1. As a prerequisite, it is important for [Thor](https://github.com/wycats/thor) to be installed.
 2. Download the file and place where ever convenient.
-3. Use the script!
+3. invoke_before_hook and invoke_after_hook can be overrided for custom
+   functionality
+4. Use the script!
 
 ```
   thor speed_dump:load_dump sql_dump.sql -u user -p password -d database
