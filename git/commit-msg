@@ -12,7 +12,7 @@
 #     feature/st{#pivotal_id}_commit_description_here
 #
 # Sohaib Talaat Bhatti -- sohaibbbhatti@gmail.com
-# sohaibbbhatti.wordpress.org
+# sohaib.io
 
 
 def blank?(message)
